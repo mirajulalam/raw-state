@@ -11,7 +11,7 @@ const Counter = () => {
             return state - action.payload;
         }
     }
-
+     
     const [state,dispatch]=useReducer(reducer,initialState);
     
     return (
