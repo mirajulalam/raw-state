@@ -1,13 +1,59 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 
 const LongForm = () => {
+
+  const initialState ={
+    firstName:"",
+    lastName:"",
+    email:"",
+    gender:"",
+    education:"",
+    quantity:0,
+    feedback:"",
+    term:false
+  }
+  const reducer =(state,action)=>{
+    switch (action.type){
+      case"INPUT":
+      return {
+        ...state,
+        [action.payload.name] : action.payload.value
+      };
+      case"TOGGLE":
+      return {
+        ...state,
+        term : !state.term
+      };
+      case"INCREMENT":
+      return{
+        ...state,
+        quantity: state.quantity -1
+      }
+      ;
+      case"DECREMENT":
+      return {
+        ...state,
+        quantity : state.quantity +1
+      };
+      default:
+        return state
+    }
+  }
+
+  const submit =(event)=>{
+    event.preventDefault();
+
+    console.log(state);
+  }
+
+  const [state,dispatch]=useReducer(reducer,initialState)
     return (
         <div className='h-screen w-screen flex justify-center items-center overflow-auto'>
         <form
           className='shadow-lg p-10 rounded-md flex flex-wrap gap-3 max-w-3xl justify-between'
-          
+          onSubmit={submit}
         >
-          <div className='flex flex-col w-full max-w-xs'>
+          <div className='flex flex-col w-full max-w-xs border-black'>
             <label className='mb-2' htmlFor='firstName'>
               First Name
             </label>
@@ -15,7 +61,10 @@ const LongForm = () => {
               type='text'
               name='firstName'
               id='firstName'
-             
+              onBlur={(e)=>dispatch({
+                type:"INPUT",
+                payload:{name: e.target.name, value: e.target.value},
+              })}
             />
           </div>
           <div className='flex flex-col w-full max-w-xs'>
@@ -26,7 +75,10 @@ const LongForm = () => {
               type='text'
               name='lastName'
               id='lastName'
-             
+              onBlur={(e)=>dispatch({
+                type:"INPUT",
+                payload:{name: e.target.name, value: e.target.value},
+              })}
             />
           </div>
           <div className='flex flex-col w-full max-w-xs'>
@@ -37,7 +89,10 @@ const LongForm = () => {
               type='email'
               name='email'
               id='email'
-             
+              onBlur={(e)=>dispatch({
+                type:"INPUT",
+                payload:{name: e.target.name, value: e.target.value},
+              })}
             />
           </div>
           <div className='flex flex-col w-full max-w-xs'>
@@ -49,7 +104,10 @@ const LongForm = () => {
                   id='male'
                   name='gender'
                   value='male'
-                 
+                  onClick={(e)=>dispatch({
+                    type:"INPUT",
+                    payload:{name: e.target.name, value: e.target.value},
+                  })}
                 />
                 <label className='ml-2 text-lg' for='male'>
                   Male
@@ -61,7 +119,10 @@ const LongForm = () => {
                   id='female'
                   name='gender'
                   value='female'
-                 
+                  onClick={(e)=>dispatch({
+                    type:"INPUT",
+                    payload:{name: e.target.name, value: e.target.value},
+                  })}
                 />
                 <label className='ml-2 text-lg' for='female'>
                   Female
@@ -73,7 +134,10 @@ const LongForm = () => {
                   id='other'
                   name='gender'
                   value='other'
-                  
+                  onClick={(e)=>dispatch({
+                    type:"INPUT",
+                    payload:{name: e.target.name, value: e.target.value},
+                  })}
                 />
                 <label className='ml-2 text-lg' for='other'>
                   Other
@@ -88,7 +152,10 @@ const LongForm = () => {
             <select
               name='education'
               id='education'
-             
+              onChange={(e)=>dispatch({
+                type:"INPUT",
+                payload:{name: e.target.name, value: e.target.value},
+              })}
             >
               <option value='SSC'>SSC</option>
               <option value='HSC'>HSC</option>
@@ -99,13 +166,13 @@ const LongForm = () => {
           <div className='flex flex-col w-full max-w-xs'>
             <label className='mb-3'>Number of PCs</label>
             <div className='flex justify-between items-center gap-2 '>
-              <button className='bg-indigo-500 text-lg text-white rounded h-10 w-10 '>
+              <button className='bg-indigo-500 text-lg text-white rounded h-10 w-10 ' onClick={()=> dispatch({type:"DECREMENT"})}>
                 -
               </button>
               <div className='border flex-1 flex justify-center items-center h-10 rounded-md border-gray-300'>
                 <span className='text-lg'>0</span>
               </div>
-              <button className='bg-indigo-500 text-lg text-white rounded h-10 w-10'>
+              <button className='bg-indigo-500 text-lg text-white rounded h-10 w-10' onClick={()=> dispatch({type:"INCREMENT"})}>
                 +
               </button>
             </div>
@@ -119,7 +186,10 @@ const LongForm = () => {
               id='feedback'
               cols='30'
               rows='4'
-              
+              onBlur={(e)=>dispatch({
+                type:"INPUT",
+                payload:{name: e.target.name, value: e.target.value},
+              })}
             ></textarea>
           </div>
   
@@ -130,14 +200,14 @@ const LongForm = () => {
                 type='checkbox'
                 name='term'
                 id='terms'
-
+                onClick={()=>dispatch({type:"TOGGLE"})}
               />
               <label for='terms'>I agree to terms and conditions</label>
             </div>
             <button
               className=' px-4 py-3 bg-indigo-500 rounded-md font-semibold text-white text-lg disabled:bg-gray-500'
-              type='submit'
-           
+              type='submit' 
+              disabled={!state.term}
             >
               Submit
             </button>
